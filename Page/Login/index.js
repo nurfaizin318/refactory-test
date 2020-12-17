@@ -73,7 +73,7 @@ const Login = (props) => {
             </View>
             <View style={styles.button.container}>
                 <Buttons title='Login' onPress={()=>alert("A")}/>
-                <Buttons title='Register' onPress={()=>props.navigation.navigate('Register')}/>
+                <Buttons title='Register' onPress={()=>props.navigation.navigate('Register',{location:location})}/>
             </View>
             <View style={styles.location.container}>
                 <Text style={styles.location.text}>Latitude   : {location.lat} </Text>

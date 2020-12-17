@@ -1,10 +1,13 @@
-import React from 'react';
-import { View, Text } from "react-native";
+import React,{useState} from 'react';
+import { View, Text ,Image} from "react-native";
 import { TextInputs, Buttons } from '../../Component';
+import ImagePicker from 'react-native-image-picker';
 
-const Register = () => {
+const Register = (props) => {
 
-    selectFile = () => {
+  const [photo,setPhoto] = useState("") 
+
+  const  selectFile = () => {
         var options = {
           title: 'Select Image',
           customButtons: [
@@ -31,13 +34,10 @@ const Register = () => {
             alert(res.customButton);
           } else {
             let source = res;
-            this.setState({
-              resourcePath: source,
-            });
+           setPhoto(source)
           }
         });
       };
-
 
     return (
         <View style={styles.container}>
@@ -53,9 +53,19 @@ const Register = () => {
                 </View>
                 <View style={styles.form.rowPhoto}>
                     <Text style={{ marginTop: 10 }}>photo</Text>
+
+                    {photo === null ? null :
                     <View style={{ width: 100, height: 100, borderWidth: 1, borderColor: 'black',marginLeft:40 }}>
+                        <Image source = {{uri:photo === null ? "" :photo.uri }} style={{width:100 ,height:100}}/>
                     </View>
+                    }
                     <Buttons title="upload" onPress={selectFile}/>
+                </View>
+                <View style={styles.form.rowEmail}>
+                    <Text style={{ marginTop: 10 }}>Email</Text>
+                    <View style={{ width: '70%' }}>
+                        <TextInputs />
+                    </View>
                 </View>
                 <View style={styles.form.rowPassword}>
                     <Text style={{ marginTop: 10 }}>Password</Text>
@@ -69,9 +79,17 @@ const Register = () => {
                 <Buttons title="Register" />
             </View>
             <View style={styles.location.container}>
-                <Text style={styles.location.text}>Latitude   :  </Text>
-                <Text style={styles.location.text}>Longitude : </Text>
+                <Text style={styles.location.text}>Latitude   :{props.route.params.location.lat}  </Text>
+                <Text style={styles.location.text}>Longitude :  {props.route.params.location.long}</Text>
             </View>
+
+            
+            <Image source = {{uri: photo.uri, 
+            }} style={{width:100 ,height:100}}
+                
+            />
+            
+            
         </View>
     );
 }
@@ -118,7 +136,12 @@ const styles = {
             marginTop:20,
             flexDirection: 'row',
             justifyContent: 'space-between'
-        }
+        },
+        rowEmail: {
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            marginTop: 20
+        },
     },
     button: {
         container: {
