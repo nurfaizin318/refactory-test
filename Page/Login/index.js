@@ -2,12 +2,14 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, PermissionsAndroid } from 'react-native';
 import { TextInputs, Buttons } from '../../Component';
 import Geolocation from 'react-native-geolocation-service';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Login = (props) => {
 
 
     const [location, setLocation] = useState({ long: '', lat: '' })
-
+    const [loginStory, setLoginStory] = useState([]);
+    const [email, setEmail] = useState('')
 
     //get permision and location
     const checkPermision = async () => {
@@ -20,7 +22,7 @@ const Login = (props) => {
                     PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
                     {
                         title: ' Location Permission',
-                        message:'Needs access to your camera ',
+                        message: 'Needs access to your camera ',
                         buttonNegative: 'Cancel',
                         buttonPositive: 'OK'
                     }
@@ -44,12 +46,55 @@ const Login = (props) => {
                 console.warn(err);
             }
         }
-  
+
+    }
+
+
+    const getData = async () => {
+
+        //check data on storage
+        try {
+            const value = AsyncStorage.getItem('loginStory')
+            if (value !== null) {
+                setLoginStory(JSON.parse(value))
+            }
+        } catch (e) {
+           alert(e)
+        }
+        //search index on storage
+        const index = loginStory.findIndex(value => value.email === email);
+        //if data null > insert new user
+        if (await index < 0) {
+            setLoginStory(prev => [...prev, { email: email, count: 0 }])
+
+        }
+        //if data !== null > add count login and save to storage
+        else {
+
+            const lastDataLogin = [...loginStory];
+
+            lastDataLogin[index].count += 1;
+
+            setLoginStory(lastDataLogin)
+            try {
+                await AsyncStorage.setItem('loginStory', JSON.stringify(loginStory))
+            } catch (e) {
+                alert(e)
+            }
+            alert(`anda login ke ${loginStory[index].count}`)
+
+
+        }
+
+        return
+
     }
 
 
     useEffect(() => {
+
         checkPermision();
+
     }, [])
 
     return (
@@ -61,7 +106,7 @@ const Login = (props) => {
                 <View style={styles.form.rowUsername}>
                     <Text style={{ marginTop: 10 }}>Username</Text>
                     <View style={{ width: '70%' }}>
-                        <TextInputs />
+                        <TextInputs onChangeText={(text) => setEmail(text)} />
                     </View>
                 </View>
                 <View style={styles.form.rowPassword}>
@@ -72,12 +117,12 @@ const Login = (props) => {
                 </View>
             </View>
             <View style={styles.button.container}>
-                <Buttons title='Login' onPress={()=>alert("A")}/>
-                <Buttons title='Register' onPress={()=>props.navigation.navigate('Register',{location:location})}/>
+                <Buttons title='Login' onPress={getData} />
+                <Buttons title='Register' onPress={() => props.navigation.navigate('Register', { location: location })} />
             </View>
             <View style={styles.location.container}>
                 <Text style={styles.location.text}>Latitude   : {location.lat} </Text>
-                <Text style={styles.location.text}>Longitude :{location.long}</Text>
+                <Text style={styles.location.text}>Longitude : {location.long}</Text>
             </View>
         </View>
     );
@@ -100,7 +145,6 @@ const styles = {
         },
         text: {
             fontSize: 30,
-            color: 'white',
         }
     },
     form: {

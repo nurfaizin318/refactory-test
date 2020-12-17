@@ -6,7 +6,7 @@ const TextInputs = (props) => {
     return (
         <Item regular>
             <Input
-                onChange={props.onChange}
+                onChangeText={props.onChangeText}
                 placeholder={props.placeholder}
                 style={styles.input}
             />
