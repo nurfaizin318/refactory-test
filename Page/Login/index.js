@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, PermissionsAndroid } from 'react-native';
 import { TextInputs, Buttons } from '../../Component';
+import Geolocation from 'react-native-geolocation-service';
 
 const Login = (props) => {
 
@@ -48,6 +49,7 @@ const Login = (props) => {
 
 
     useEffect(() => {
+        checkPermision();
     }, [])
 
     return (
