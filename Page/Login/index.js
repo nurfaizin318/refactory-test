@@ -54,7 +54,7 @@ const Login = (props) => {
 
         //check data on storage
         try {
-            const value = AsyncStorage.getItem('loginStory')
+            const value =await  AsyncStorage.getItem('loginStory')
             if (value !== null) {
                 setLoginStory(JSON.parse(value))
             }
@@ -62,9 +62,11 @@ const Login = (props) => {
            alert(e)
         }
         //search index on storage
-        const index = loginStory.findIndex(value => value.email === email);
+         const index = loginStory.findIndex(value => value.email === email);
+         
         //if data null > insert new user
         if (await index < 0) {
+
             setLoginStory(prev => [...prev, { email: email, count: 0 }])
 
         }
@@ -81,12 +83,12 @@ const Login = (props) => {
             } catch (e) {
                 alert(e)
             }
-            alert(`anda login ke ${loginStory[index].count}`)
 
+            alert(`anda login ke ${loginStory[index].count}`)
+            props.navigation.navigate('Home')
 
         }
-
-        return
+    
 
     }
 

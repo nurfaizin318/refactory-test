@@ -19,7 +19,7 @@ const Register = (props) => {
        
         //check data on storage
         try {
-            const value = AsyncStorage.getItem('loginStory')
+            const value = await AsyncStorage.getItem('loginStory')
             if (value !== null) {
                 setLoginStory(JSON.parse(value))
             }
@@ -146,7 +146,6 @@ const Register = (props) => {
                 <Buttons title='Register' onPress={storeData} />
             </View>
             <View style={styles.location.container}>
-                <Text style={styles.location.text}>{loginStory.length}  </Text>
                 <Text style={styles.location.text}>Latitude   :{props.route.params.location.lat}  </Text>
                 <Text style={styles.location.text}>Longitude :  {props.route.params.location.long}</Text>
             </View>
